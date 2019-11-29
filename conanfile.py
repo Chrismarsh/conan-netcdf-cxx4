@@ -9,8 +9,8 @@ class NetcdfcConan(ConanFile):
     url = "https://github.com/bilke/conan-netcdf-cxx"
     description = "Unidata network Common Data Form cxx"
     settings = "os", "compiler", "build_type", "arch"
-    # options = {"shared": [True, False], "fPIC": [True, False]}
-    # default_options = "shared=False", "fPIC=True"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = "shared=True", "fPIC=True"
     generators = "cmake"
 
     def source(self):
@@ -40,7 +40,7 @@ conan_basic_setup()''')
         cmake = CMake(self)
         cmake.definitions["NCXX_ENABLE_TESTS"] = False
         cmake.definitions["ENABLE_CONVERSION_WARNINGS"] = False
-        cmake.definitions["BUILD_SHARED_LIBS"] = False
+        cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
         cmake.configure(source_folder="netcdf-cxx4")
         return cmake
 
@@ -54,4 +54,3 @@ conan_basic_setup()''')
 
     def package_info(self):
         self.cpp_info.libs = ["netcdf-cxx4"]
-
