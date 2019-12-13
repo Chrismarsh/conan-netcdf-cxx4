@@ -24,7 +24,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()''')
 
     def requirements(self):
-        self.requires("netcdf-c/4.6.2@CHM/dev")
+        self.requires("netcdf-c/4.6.2@CHM/stable")
 
     # def config_options(self):
         # if self.settings.os == "Windows":
