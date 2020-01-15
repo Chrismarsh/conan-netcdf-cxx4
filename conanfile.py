@@ -41,8 +41,7 @@ conan_basic_setup()''')
         cmake.definitions["NCXX_ENABLE_TESTS"] = False
         cmake.definitions["ENABLE_CONVERSION_WARNINGS"] = False
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        if self.settings.os == 'Macos':
-            cmake.definitions["CMAKE_INSTALL_NAME_DIR"] = "@rpath"
+        cmake.definitions["CMAKE_INSTALL_NAME_DIR"] = "@rpath"
 
         cmake.configure(source_folder="netcdf-cxx4")
         return cmake
