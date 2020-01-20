@@ -21,7 +21,7 @@ class NetcdfcConan(ConanFile):
         tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
                               '''PROJECT(NCXX C CXX)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()''')
+conan_basic_setup(KEEP_RPATHS)''')
 
     def requirements(self):
         self.requires("netcdf-c/4.6.2@CHM/stable")
@@ -41,7 +41,6 @@ conan_basic_setup()''')
         cmake.definitions["NCXX_ENABLE_TESTS"] = False
         cmake.definitions["ENABLE_CONVERSION_WARNINGS"] = False
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        cmake.definitions["CMAKE_INSTALL_NAME_DIR"] = "@rpath"
 
         cmake.configure(source_folder="netcdf-cxx4")
         return cmake
