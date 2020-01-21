@@ -15,13 +15,17 @@ class NetcdfcConan(ConanFile):
 
     def source(self):
         self.run("git clone --depth=1 https://github.com/Unidata/netcdf-cxx4.git")
-        # This small hack might be useful to guarantee proper /MT /MD linkage
-        # in MSVC if the packaged project doesn't have variables to set it
-        # properly
-        tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
-                              '''PROJECT(NCXX C CXX)
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()''')
+
+        if tools.os_info.is_macos:
+            tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
+                                  '''PROJECT(NCXX C CXX)
+                                    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+                                    conan_basic_setup(KEEP_RPATHS)''')
+        else:
+            tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
+                                  '''PROJECT(NCXX C CXX)
+                                    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+                                    conan_basic_setup()''')
 
     def requirements(self):
         self.requires("netcdf-c/4.6.2@CHM/stable")
@@ -42,6 +46,8 @@ conan_basic_setup()''')
         cmake.definitions["ENABLE_CONVERSION_WARNINGS"] = False
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
 
+        if tools.os_info.is_macos:
+            cmake.definitions["CMAKE_INSTALL_NAME_DIR"] = "@rpath"
         cmake.configure(source_folder="netcdf-cxx4")
         return cmake
 
