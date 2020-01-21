@@ -21,7 +21,7 @@ class NetcdfcConan(ConanFile):
         tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
                               '''PROJECT(NCXX C CXX)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(KEEP_RPATHS)''')
+conan_basic_setup()''')
 
     def requirements(self):
         self.requires("netcdf-c/4.6.2@CHM/stable")
