@@ -60,10 +60,10 @@ class NetcdfcConan(ConanFile):
         cmake = self.configure_cmake()
         cmake.install()
 
-        if tools.os_info.is_linux:
-            with tools.chdir(self.package_folder):
-                cmd = "patchelf --remove-rpath lib/libnetcdf-cxx4.so"
-                os.system(cmd)
+        # if tools.os_info.is_linux:
+        #     with tools.chdir(self.package_folder):
+        #         cmd = "patchelf --remove-rpath lib/libnetcdf-cxx4.so"
+        #         os.system(cmd)
 
     def package_info(self):
         self.cpp_info.libs = ["netcdf-cxx4"]
