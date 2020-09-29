@@ -6,16 +6,23 @@ class NetcdfcConan(ConanFile):
     name = "netcdf-cxx"
     version = "4.3.1"
     license = "MIT"
-    author = "Lars Bilke, lars.bilke@ufz.de"
     url = "https://github.com/bilke/conan-netcdf-cxx"
     description = "Unidata network Common Data Form cxx"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = "shared=True", "fPIC=True"
+    options = {"shared": [True, False], 
+                "fPIC": [True, False]}
+    default_options = { "shared":True, 
+                        "fPIC":True}
+
     generators = "cmake"
 
     def source(self):
-        self.run("git clone --depth=1 https://github.com/Unidata/netcdf-cxx4.git")
+        if self.settings.os == "Windows":
+            raise ConanInvalidConfiguration("Windows is not supported")
+
+        git = tools.Git()
+        git.clone("https://github.com/Unidata/netcdf-cxx4.git") 
+        git.checkout("4.3.1")
 
         if tools.os_info.is_macos:
             tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
@@ -31,15 +38,11 @@ class NetcdfcConan(ConanFile):
     def requirements(self):
         self.requires("netcdf-c/4.6.2@CHM/stable")
 
-    # def config_options(self):
-        # if self.settings.os == "Windows":
-            # del self.options.fPIC
 
     def configure(self):
         del self.settings.compiler.libcxx
         del self.settings.compiler.cppstd
-        # if self.settings.os == "Windows" and self.options.shared:
-            # raise ConanInvalidConfiguration("Windows shared builds are not supported right now")
+
 
     def configure_cmake(self):
         cmake = CMake(self)
