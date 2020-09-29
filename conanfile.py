@@ -20,9 +20,9 @@ class NetcdfcConan(ConanFile):
         if self.settings.os == "Windows":
             raise ConanInvalidConfiguration("Windows is not supported")
 
-        git = tools.Git()
+        git = tools.Git(folder='netcdf-cxx4')
         git.clone("https://github.com/Unidata/netcdf-cxx4.git") 
-        git.checkout("4.3.1")
+        git.checkout("v4.3.1")
 
         if tools.os_info.is_macos:
             tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
