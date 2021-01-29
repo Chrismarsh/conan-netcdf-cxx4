@@ -72,7 +72,7 @@ int main()
       // out of scope. This frees up any internal netCDF resources
       // associated with the file, and flushes any buffers.
 
-      //cout << "*** SUCCESS writing example file simple_xy.nc!" << endl;
+      cout << "*** SUCCESS writing example file simple_xy.nc!" << endl;
       return 0;
     }
   catch(NcException& e)

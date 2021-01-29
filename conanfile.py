@@ -4,9 +4,8 @@ import os
 
 class NetcdfcConan(ConanFile):
     name = "netcdf-cxx"
-    version = "4.3.1"
     license = "MIT"
-    url = "https://github.com/bilke/conan-netcdf-cxx"
+    url = "https://github.com/Chmarshris/conan-netcdf-cxx"
     description = "Unidata network Common Data Form cxx"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], 
@@ -16,13 +15,12 @@ class NetcdfcConan(ConanFile):
 
     generators = "cmake"
 
-    def source(self):
-        if self.settings.os == "Windows":
-            raise ConanInvalidConfiguration("Windows is not supported")
+    source_subfolder = "netcdf-cxx4"
 
-        git = tools.Git(folder='netcdf-cxx4')
-        git.clone("https://github.com/Unidata/netcdf-cxx4.git") 
-        git.checkout("v4.3.1")
+    def source(self):
+        tools.get(**self.conan_data["sources"][self.version])
+
+        os.rename("netcdf-cxx4-{0}".format(self.version), self.source_subfolder)
 
         if tools.os_info.is_macos:
             tools.replace_in_file("netcdf-cxx4/CMakeLists.txt", "PROJECT(NCXX C CXX)",
@@ -36,12 +34,7 @@ class NetcdfcConan(ConanFile):
                                     conan_basic_setup()''')
 
     def requirements(self):
-        self.requires("netcdf-c/4.6.2@CHM/stable")
-
-
-    def configure(self):
-        del self.settings.compiler.libcxx
-        del self.settings.compiler.cppstd
+        self.requires("netcdf-c/[>=4.6]@CHM/stable")
 
 
     def configure_cmake(self):
